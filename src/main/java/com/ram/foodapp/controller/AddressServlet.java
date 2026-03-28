@@ -39,6 +39,7 @@ public class AddressServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("getting user get request :", req);
         String path = req.getPathInfo();
         if (path == null || path.equals("/")) {
             handleGetAll(req, resp);
