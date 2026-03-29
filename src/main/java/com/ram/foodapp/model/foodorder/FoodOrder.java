@@ -100,7 +100,7 @@ public class FoodOrder {
 
         public FoodOrder build() {
             if (userId == 0) throw new IllegalStateException("userId cannot be null");
-            status = (status != null) ? status : OrderStatus.CREATED;
+            status = (status != null) ? status : OrderStatus.PENDING;
             orderDateTime = (orderDateTime != null) ? orderDateTime : LocalDateTime.now();
             if (totalPrice == null || totalPrice.signum() <= 0) {
                 throw new IllegalStateException("Total price must be greater than zero");

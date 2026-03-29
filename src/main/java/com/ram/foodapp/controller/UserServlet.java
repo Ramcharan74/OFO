@@ -9,6 +9,7 @@ import com.ram.foodapp.dto.response.UserResponse;
 import com.ram.foodapp.mapper.UserMapper;
 import com.ram.foodapp.model.user.User;
 import com.ram.foodapp.service.UserService;
+import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ import java.util.Optional;
 public class UserServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(UserServlet.class);
     UserService userService;
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = JsonUtil.DEFAULT_MAPPER;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -80,7 +81,7 @@ public class UserServlet extends HttpServlet {
     private void handleGetUsers(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int page = parseInt(req.getParameter("page"), 0);
         int size = parseInt(req.getParameter("size"), 10);
-        PageRequest pageRequest = new PageRequest(page,size);
+        PageRequest pageRequest = new PageRequest(page, size);
         List<UserResponse> users = userService.findAll(pageRequest)
                 .stream()
                 .map(UserMapper::toResponse)

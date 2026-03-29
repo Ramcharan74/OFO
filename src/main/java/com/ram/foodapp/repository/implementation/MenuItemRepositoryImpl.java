@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class MenuItemRepositoryImpl implements MenuItemReadRepository, MenuItemWriteRepository {
     private static final Logger logger = LoggerFactory.getLogger(MenuItemRepositoryImpl.class);
-    private static final String BASE_QUERY = "SELECT * FROM MENU_ITEM";
+    private static final String BASE_QUERY = "SELECT * FROM MENU_ITEM ";
     private static final String RESTAURANT_BASE_QUERY = BASE_QUERY + "WHERE RESTAURANT_ID = ?";
     private static final String ALL_MENU_ITEMS = BASE_QUERY + "ORDER BY ID LIMIT ? OFFSET ?";
     private static final String MENU_ITEM_BY_ID = BASE_QUERY + "WHERE ID = ?";

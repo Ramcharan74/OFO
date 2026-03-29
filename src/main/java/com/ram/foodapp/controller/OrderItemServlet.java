@@ -9,6 +9,7 @@ import com.ram.foodapp.mapper.OrderItemMapper;
 import com.ram.foodapp.model.orderitem.OrderItem;
 import com.ram.foodapp.service.OrderItemService;
 
+import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -27,7 +28,7 @@ public class OrderItemServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(OrderItemServlet.class);
 
     private OrderItemService orderItemService;
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = JsonUtil.DEFAULT_MAPPER;
 
     @Override
     public void init(ServletConfig config) {
