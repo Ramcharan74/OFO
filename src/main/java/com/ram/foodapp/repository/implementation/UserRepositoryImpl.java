@@ -4,6 +4,7 @@ import com.ram.foodapp.enums.Role;
 import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.exception.DataAccessException;
 import com.ram.foodapp.model.address.PhoneNumber;
+import com.ram.foodapp.model.foodorder.AuditInfo;
 import com.ram.foodapp.model.user.ContactInfo;
 import com.ram.foodapp.model.user.User;
 import com.ram.foodapp.config.DBConnection;
@@ -212,10 +213,10 @@ public class UserRepositoryImpl implements UserWriteRepository, UserReadReposito
             user.credentials(new UserCredentials(rs.getString("PASSWORD")));
             user.role(Role.valueOf(rs.getString("ROLE")));
             user.isActive(rs.getBoolean("ACTIVE"));
+            user.auditInfo(new AuditInfo(rs.getTimestamp("CREATED_AT").toLocalDateTime()));
             return user.build();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataAccessException("failed at  mapping User ResultSet to Object");
         }
-        return null;
     }
 }

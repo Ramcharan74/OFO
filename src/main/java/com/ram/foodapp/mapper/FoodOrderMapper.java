@@ -13,7 +13,7 @@ public class FoodOrderMapper {
     public static FoodOrder toEntity(CreateOrderRequest req) {
         return new FoodOrder.Builder()
                 .userId(req.userId())
-                .orderStatus(OrderStatus.CREATED)
+                .orderStatus(OrderStatus.PENDING)
                 .totalPrice(BigDecimal.valueOf(req.totalPrice()))
                 .orderDateTime(LocalDateTime.now())
                 .payment(new Payment(
@@ -27,11 +27,13 @@ public class FoodOrderMapper {
         return new FoodOrderResponse(
                 order.getId(),
                 order.getUserId(),
-                order.getStatus().name(),
-                order.getTotalPrice().doubleValue(),
-                order.getOrderDateTime().toString(),
-                order.getPayment().isPaid(),
-                order.getPayment().getPaymentMode().name()
+                order.getStatus() != null ? order.getStatus().name() : null,
+                order.getTotalPrice() != null ? order.getTotalPrice().doubleValue() : 0.0,
+                order.getOrderDateTime() != null ? order.getOrderDateTime().toString() : null,
+                order.getPayment() != null && order.getPayment().isPaid(),
+                order.getPayment() != null && order.getPayment().getPaymentMode() != null
+                        ? order.getPayment().getPaymentMode().name()
+                        : null
         );
     }
 }

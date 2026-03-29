@@ -10,6 +10,7 @@ import com.ram.foodapp.dto.response.ApiResponse;
 import com.ram.foodapp.mapper.AddressMapper;
 import com.ram.foodapp.model.address.Address;
 import com.ram.foodapp.service.AddressService;
+import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,7 +30,7 @@ public class AddressServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(AddressServlet.class);
 
     private AddressService addressService;
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = JsonUtil.DEFAULT_MAPPER;
 
     @Override
     public void init(ServletConfig config) {
@@ -55,6 +56,7 @@ public class AddressServlet extends HttpServlet {
         }
         resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid GET endpoint");
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();

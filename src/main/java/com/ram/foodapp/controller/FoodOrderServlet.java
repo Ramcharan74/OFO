@@ -10,6 +10,7 @@ import com.ram.foodapp.mapper.FoodOrderMapper;
 import com.ram.foodapp.model.foodorder.FoodOrder;
 import com.ram.foodapp.service.FoodOrderService;
 
+import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -28,7 +29,7 @@ public class FoodOrderServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(FoodOrderServlet.class);
 
     private FoodOrderService foodOrderService;
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = JsonUtil.DEFAULT_MAPPER;
 
     @Override
     public void init(ServletConfig config) {
@@ -36,7 +37,6 @@ public class FoodOrderServlet extends HttpServlet {
         foodOrderService = context.getBean(FoodOrderService.class);
     }
 
-    // ================= GET =================
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 

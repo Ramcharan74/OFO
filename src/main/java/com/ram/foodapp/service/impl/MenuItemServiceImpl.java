@@ -8,6 +8,7 @@ import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.menuitem.MenuItem;
 import com.ram.foodapp.repository.implementation.MenuItemRepositoryImpl;
 import com.ram.foodapp.service.MenuItemService;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     MenuItemRepositoryImpl menuItemRepositoryImpl;
 
     public MenuItemServiceImpl(MenuItemRepositoryImpl menuItemRepositoryImpl) {
-        menuItemRepositoryImpl = menuItemRepositoryImpl;
+        this.menuItemRepositoryImpl = menuItemRepositoryImpl;
     }
 
     @Override
