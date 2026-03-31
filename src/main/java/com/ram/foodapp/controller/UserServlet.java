@@ -1,7 +1,6 @@
 package com.ram.foodapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ram.foodapp.config.AppConfig;
 import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.dto.request.RegisterUserRequest;
 import com.ram.foodapp.dto.response.ApiResponse;
@@ -19,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +31,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
         userService = context.getBean(UserService.class);
     }
 

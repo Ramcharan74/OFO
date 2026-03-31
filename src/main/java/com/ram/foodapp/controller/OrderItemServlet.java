@@ -2,18 +2,20 @@ package com.ram.foodapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ram.foodapp.config.AppConfig;
-import com.ram.foodapp.dto.request.*;
+import com.ram.foodapp.dto.request.BulkOrderItemRequest;
+import com.ram.foodapp.dto.request.CreateOrderItemRequest;
+import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.dto.response.ApiResponse;
 import com.ram.foodapp.dto.response.OrderItemResponse;
 import com.ram.foodapp.mapper.OrderItemMapper;
 import com.ram.foodapp.model.orderitem.OrderItem;
 import com.ram.foodapp.service.OrderItemService;
-
 import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +34,7 @@ public class OrderItemServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
         orderItemService = context.getBean(OrderItemService.class);
     }
 

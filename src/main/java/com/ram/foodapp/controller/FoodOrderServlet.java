@@ -9,12 +9,12 @@ import com.ram.foodapp.enums.OrderStatus;
 import com.ram.foodapp.mapper.FoodOrderMapper;
 import com.ram.foodapp.model.foodorder.FoodOrder;
 import com.ram.foodapp.service.FoodOrderService;
-
 import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +33,7 @@ public class FoodOrderServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
         foodOrderService = context.getBean(FoodOrderService.class);
     }
 

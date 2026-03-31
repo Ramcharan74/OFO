@@ -2,12 +2,11 @@ package com.ram.foodapp.repository.implementation;
 
 import com.ram.foodapp.config.DBConnection;
 import com.ram.foodapp.dto.request.PageRequest;
+import com.ram.foodapp.enums.OrderStatus;
 import com.ram.foodapp.model.foodorder.AuditInfo;
 import com.ram.foodapp.model.foodorder.FoodOrder;
-import com.ram.foodapp.enums.OrderStatus;
 import com.ram.foodapp.model.foodorder.Payment;
-import com.ram.foodapp.repository.OrderReadRepository;
-import com.ram.foodapp.repository.OrderWriteRepository;
+import com.ram.foodapp.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderRepositoryImpl implements OrderReadRepository, OrderWriteRepository {
+public class OrderRepositoryImpl implements OrderRepository {
     private static final Logger logger = LoggerFactory.getLogger(OrderRepositoryImpl.class);
     private static final String BASE_QUERY = "SELECT * FROM FOOD_ORDER ";
     private static final String FIND_ALL = BASE_QUERY + "ORDER BY CREATED_AT DESC LIMIT ? OFFSET ?";
@@ -33,142 +32,142 @@ public class OrderRepositoryImpl implements OrderReadRepository, OrderWriteRepos
     private static final String UPDATE_TOTAL_PRICE = "UPDATE FOOD_ORDER SET TOTAL_PRICE = ? WHERE ID = ?";
 
     @Override
-    public List<FoodOrder> findAll(PageRequest pageRequest){
+    public List<FoodOrder> findAll(PageRequest pageRequest) {
         List<FoodOrder> foodOrderList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(FIND_ALL)){
-            ps.setInt(1,pageRequest.getSize());
-            ps.setInt(2,pageRequest.getPage());
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(FIND_ALL)) {
+            ps.setInt(1, pageRequest.getSize());
+            ps.setInt(2, pageRequest.getPage());
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 foodOrderList.add(mapToFoodOrder(rs));
             }
             return foodOrderList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<FoodOrder> findByUserId(int userId,PageRequest pageRequest){
+    public List<FoodOrder> findByUserId(int userId, PageRequest pageRequest) {
         List<FoodOrder> foodOrderList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection()){
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(FIND_BY_USERID);
-            pstmt.setInt(1,userId);
-            pstmt.setInt(2,pageRequest.getSize());
-            pstmt.setInt(3,pageRequest.getPage());
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, pageRequest.getSize());
+            pstmt.setInt(3, pageRequest.getPage());
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 foodOrderList.add(mapToFoodOrder(rs));
             }
             return foodOrderList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public Optional<FoodOrder> findById(int id){
-        try(Connection conn = DBConnection.getConnection()){
+    public Optional<FoodOrder> findById(int id) {
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(FIND_BY_ID);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return Optional.of(mapToFoodOrder(rs));
             }
             return null;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<FoodOrder> findByDate(Date date){
+    public List<FoodOrder> findByDate(Date date) {
         List<FoodOrder> foodOrderList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection()){
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(FIND_BY_DATE);
-            ps.setDate(1,new java.sql.Date(date.getTime()));
+            ps.setDate(1, new java.sql.Date(date.getTime()));
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 foodOrderList.add(mapToFoodOrder(rs));
             }
             return foodOrderList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<FoodOrder> findByStatus(String status,PageRequest pageRequest){
+    public List<FoodOrder> findByStatus(String status, PageRequest pageRequest) {
         List<FoodOrder> foodOrderList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection()){
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(FIND_BY_STATUS);
-            ps.setString(1,status);
-            ps.setInt(2,pageRequest.getSize());
-            ps.setInt(3,pageRequest.getPage());
+            ps.setString(1, status);
+            ps.setInt(2, pageRequest.getSize());
+            ps.setInt(3, pageRequest.getPage());
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 foodOrderList.add(mapToFoodOrder(rs));
             }
             return foodOrderList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<FoodOrder> findByPaymentMode(String paymentMode,PageRequest pageRequest){
+    public List<FoodOrder> findByPaymentMode(String paymentMode, PageRequest pageRequest) {
         List<FoodOrder> foodOrderList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection()){
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(FIND_BY_PAYMENT_MODE);
-            ps.setString(1,paymentMode);
-            ps.setInt(2,pageRequest.getSize());
-            ps.setInt(3,pageRequest.getPage());
+            ps.setString(1, paymentMode);
+            ps.setInt(2, pageRequest.getSize());
+            ps.setInt(3, pageRequest.getPage());
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 foodOrderList.add(mapToFoodOrder(rs));
             }
             return foodOrderList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<FoodOrder> findByPaidStatus(Boolean isPaid){
+    public List<FoodOrder> findByPaidStatus(Boolean isPaid) {
         List<FoodOrder> foodOrderList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection()){
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(FIND_BY_IS_PAID_STATUS);
-            ps.setBoolean(1,isPaid);
+            ps.setBoolean(1, isPaid);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 foodOrderList.add(mapToFoodOrder(rs));
             }
             return foodOrderList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public FoodOrder save(FoodOrder foodOrder){
-        try(Connection connection = DBConnection.getConnection()){
+    public FoodOrder save(FoodOrder foodOrder) {
+        try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement pstmt = connection.prepareStatement(INSERT_FOOD_ORDER, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setInt(1,foodOrder.getUserId());
+            pstmt.setInt(1, foodOrder.getUserId());
             pstmt.setString(2, foodOrder.getStatus().name());
-            pstmt.setBigDecimal(3,foodOrder.getTotalPrice());
-            pstmt.setBoolean(4,foodOrder.getPayment().isPaid());
-            pstmt.setString(5,foodOrder.getPayment().getPaymentMode().name());
+            pstmt.setBigDecimal(3, foodOrder.getTotalPrice());
+            pstmt.setBoolean(4, foodOrder.getPayment().isPaid());
+            pstmt.setString(5, foodOrder.getPayment().getPaymentMode().name());
             pstmt.executeQuery();
-            try(ResultSet rs = pstmt.getGeneratedKeys()){
-                if(rs.next()){
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
                     int generated = rs.getInt(1);
                     FoodOrder savedFoodOrder = new FoodOrder.Builder()
                             .id(generated)
@@ -181,7 +180,7 @@ public class OrderRepositoryImpl implements OrderReadRepository, OrderWriteRepos
                     return savedFoodOrder;
                 }
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -268,7 +267,7 @@ public class OrderRepositoryImpl implements OrderReadRepository, OrderWriteRepos
         }
     }
 
-    private FoodOrder mapToFoodOrder(ResultSet rs){
+    private FoodOrder mapToFoodOrder(ResultSet rs) {
         FoodOrder.Builder foodOrder = new FoodOrder.Builder();
         try {
             foodOrder.id(rs.getInt("ID"));
@@ -276,10 +275,10 @@ public class OrderRepositoryImpl implements OrderReadRepository, OrderWriteRepos
             foodOrder.orderStatus(OrderStatus.valueOf(rs.getString("STATUS")));
             foodOrder.totalPrice(rs.getBigDecimal("TOTAL_PRICE"));
             foodOrder.orderDateTime(rs.getTimestamp("ORDER_DATETIME").toLocalDateTime());
-            foodOrder.payment(new Payment(rs.getBoolean("IS_PAID"),rs.getString("PAYMENT_MODE")));
+            foodOrder.payment(new Payment(rs.getBoolean("IS_PAID"), rs.getString("PAYMENT_MODE")));
             foodOrder.createdAt(new AuditInfo(rs.getTimestamp("CREATED_AT").toLocalDateTime()));
             return foodOrder.build();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

@@ -6,25 +6,26 @@ import com.ram.foodapp.enums.PaymentMode;
 import com.ram.foodapp.exception.DataAccessException;
 import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.foodorder.FoodOrder;
-import com.ram.foodapp.repository.implementation.OrderRepositoryImpl;
+import com.ram.foodapp.repository.OrderRepository;
 import com.ram.foodapp.service.FoodOrderService;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class FoodOrderServiceImpl implements FoodOrderService {
-    OrderRepositoryImpl orderRepositoryImpl;
+    OrderRepository orderRepository;
 
-    public FoodOrderServiceImpl(OrderRepositoryImpl orderRepositoryImpl) {
-        this.orderRepositoryImpl = orderRepositoryImpl;
+    public FoodOrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Override
     public List<FoodOrder> findAll(PageRequest pageRequest) {
         try {
             Objects.requireNonNull(pageRequest);
-            return orderRepositoryImpl.findAll(pageRequest);
+            return orderRepository.findAll(pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch orders", e);
         }
@@ -37,7 +38,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         }
         Objects.requireNonNull(pageRequest);
         try {
-            return orderRepositoryImpl.findByUserId(userId, pageRequest);
+            return orderRepository.findByUserId(userId, pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch orders for userId: " + userId, e);
         }
@@ -49,7 +50,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             throw new IllegalArgumentException("id must be positive");
         }
         try {
-            return orderRepositoryImpl.findById(id);
+            return orderRepository.findById(id);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch order with id: " + id, e);
         }
@@ -61,7 +62,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             throw new IllegalArgumentException("Date cannot be null");
         }
         try {
-            return orderRepositoryImpl.findByDate(date);
+            return orderRepository.findByDate(date);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch orders by date", e);
         }
@@ -75,7 +76,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         Objects.requireNonNull(pageRequest);
         try {
             OrderStatus orderStatus = OrderStatus.valueOf(status.trim().toUpperCase());
-            return orderRepositoryImpl.findByStatus(orderStatus.name(), pageRequest);
+            return orderRepository.findByStatus(orderStatus.name(), pageRequest);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid order status: " + status);
         } catch (DataAccessException e) {
@@ -91,7 +92,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         Objects.requireNonNull(pageRequest);
         try {
             PaymentMode mode = PaymentMode.valueOf(paymentMode.trim().toUpperCase());
-            return orderRepositoryImpl.findByPaymentMode(mode.name(), pageRequest);
+            return orderRepository.findByPaymentMode(mode.name(), pageRequest);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid payment mode: " + paymentMode);
         } catch (DataAccessException e) {
@@ -105,7 +106,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             throw new IllegalArgumentException("isPaid cannot be null");
         }
         try {
-            return orderRepositoryImpl.findByPaidStatus(isPaid);
+            return orderRepository.findByPaidStatus(isPaid);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch orders by paid status", e);
         }
@@ -119,7 +120,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         }
 
         try {
-            return orderRepositoryImpl.save(foodOrder);
+            return orderRepository.save(foodOrder);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to save order", e);
         }
@@ -134,7 +135,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             throw new IllegalArgumentException("status cannot be null");
         }
         try {
-            orderRepositoryImpl.updateStatus(orderId, status);
+            orderRepository.updateStatus(orderId, status);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update order status", e);
         }
@@ -146,7 +147,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             throw new IllegalArgumentException("orderId must be positive");
         }
         try {
-            orderRepositoryImpl.updatePaymentStatus(orderId, isPaid);
+            orderRepository.updatePaymentStatus(orderId, isPaid);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update payment status", e);
         }
@@ -162,7 +163,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         }
         try {
             PaymentMode mode = PaymentMode.valueOf(paymentMode.trim().toUpperCase());
-            orderRepositoryImpl.updatePaymentMode(orderId, mode.name());
+            orderRepository.updatePaymentMode(orderId, mode.name());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid payment mode: " + paymentMode);
         } catch (DataAccessException e) {
@@ -179,7 +180,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             throw new IllegalArgumentException("totalPrice must be greater than zero");
         }
         try {
-            orderRepositoryImpl.updateTotalPrice(orderId, totalPrice);
+            orderRepository.updateTotalPrice(orderId, totalPrice);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update total price", e);
         }

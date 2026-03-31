@@ -1,17 +1,16 @@
 package com.ram.foodapp.repository.implementation;
 
-import com.ram.foodapp.enums.Role;
+import com.ram.foodapp.config.DBConnection;
 import com.ram.foodapp.dto.request.PageRequest;
+import com.ram.foodapp.enums.Role;
 import com.ram.foodapp.exception.DataAccessException;
 import com.ram.foodapp.model.address.PhoneNumber;
 import com.ram.foodapp.model.foodorder.AuditInfo;
 import com.ram.foodapp.model.user.ContactInfo;
 import com.ram.foodapp.model.user.User;
-import com.ram.foodapp.config.DBConnection;
-import com.ram.foodapp.model.user.UserCredentials;
-import com.ram.foodapp.repository.UserReadRepository;
 import com.ram.foodapp.model.user.User.Builder;
-import com.ram.foodapp.repository.UserWriteRepository;
+import com.ram.foodapp.model.user.UserCredentials;
+import com.ram.foodapp.repository.UserRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class UserRepositoryImpl implements UserWriteRepository, UserReadRepository {
+public class UserRepositoryImpl implements UserRepository {
     private static final String INSERT_USER = "INSERT INTO USER (EMAIL, PHONE_NO, NAME, PASSWORD, ROLE) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM USER WHERE ID = ?";
     private static final String EXISTS_BY_ID = "SELECT 1 FROM USER WHERE id = ?";
@@ -37,9 +36,9 @@ public class UserRepositoryImpl implements UserWriteRepository, UserReadReposito
         List<User> users = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(FIND_ALL)) {
-            ps.setInt(1,pageRequest.getSize());
-            ps.setInt(2,pageRequest.getPage());
-            try(ResultSet rs = ps.executeQuery()){
+            ps.setInt(1, pageRequest.getSize());
+            ps.setInt(2, pageRequest.getPage());
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     User user = mapToUser(rs);
                     users.add(user);
@@ -139,13 +138,11 @@ public class UserRepositoryImpl implements UserWriteRepository, UserReadReposito
 
     @Override
     public void deleteById(int id) {
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(DELETE_BY_ID)){
-            ps.setInt(1,id);
-            try(ResultSet rs = ps.executeQuery()){
-
-            }
-        }catch (SQLException e){
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_BY_ID)) {
+            ps.setInt(1, id);
+            ps.executeQuery();
+        } catch (SQLException e) {
             throw new RuntimeException("Error while deleting user ", e);
         }
     }

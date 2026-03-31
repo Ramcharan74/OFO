@@ -1,14 +1,14 @@
 package com.ram.foodapp.repository;
 
-import com.ram.foodapp.enums.FoodType;
 import com.ram.foodapp.dto.request.PageRequest;
+import com.ram.foodapp.enums.FoodType;
 import com.ram.foodapp.model.menuitem.MenuItem;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MenuItemReadRepository {
-
+public interface MenuItemRepository {
+    //read
     Optional<MenuItem> findById(int id);
 
     List<MenuItem> findAll(PageRequest pageRequest);
@@ -29,4 +29,18 @@ public interface MenuItemReadRepository {
 
     List<MenuItem> searchByName(int restaurantId, String name, PageRequest pageRequest);
 
+    boolean existsById(int id);
+
+    //write
+    MenuItem save(MenuItem menuItem);
+
+    List<MenuItem> saveAll(List<MenuItem> menuItems);
+
+    void updateAvailability(int menuItemId, boolean isAvailable);
+
+    void updatePrice(int menuItemId, double price);
+
+    void updateQuantity(int menuItemId, int quantity);
+
+    void deleteById(int id);
 }

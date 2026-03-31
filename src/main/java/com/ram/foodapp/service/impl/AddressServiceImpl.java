@@ -4,8 +4,8 @@ import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.exception.DataAccessException;
 import com.ram.foodapp.exception.NotFoundException;
 import com.ram.foodapp.model.address.Address;
-import com.ram.foodapp.repository.implementation.AddressRepositoryImpl;
-import com.ram.foodapp.repository.implementation.UserRepositoryImpl;
+import com.ram.foodapp.repository.AddressRepository;
+import com.ram.foodapp.repository.UserRepository;
 import com.ram.foodapp.service.AddressService;
 
 import java.util.List;
@@ -13,17 +13,17 @@ import java.util.Optional;
 
 public class AddressServiceImpl implements AddressService {
 
-    AddressRepositoryImpl addressRepositoryImpl;
-    UserRepositoryImpl userRepositoryImpl;
+    AddressRepository addressRepository;
+    UserRepository userRepository;
 
-    public AddressServiceImpl(AddressRepositoryImpl addressRepositoryImpl,UserRepositoryImpl userRepositoryImpl) {
-        this.addressRepositoryImpl = addressRepositoryImpl;
-        this.userRepositoryImpl = userRepositoryImpl;
+    public AddressServiceImpl(AddressRepository addressRepository, UserRepository userRepository) {
+        this.addressRepository = addressRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<Address> findAll(){
-        return findAll(new PageRequest(0,10));
+    public List<Address> findAll() {
+        return findAll(new PageRequest(0, 10));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AddressServiceImpl implements AddressService {
         int size = Math.min(pageRequest.getSize(), 100);
         PageRequest safeRequest = new PageRequest(pageRequest.getPage(), size);
         try {
-            return addressRepositoryImpl.findAll(safeRequest);
+            return addressRepository.findAll(safeRequest);
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching addresses", e);
         }
@@ -46,10 +46,10 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("userId must be > 0, given: " + userId);
         }
         try {
-            if(!userRepositoryImpl.existsById(userId)){
+            if (!userRepository.existsById(userId)) {
                 throw new NotFoundException("User not found with id: " + userId);
             }
-            return addressRepositoryImpl.findByUserId(userId);
+            return addressRepository.findByUserId(userId);
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching address by id: " + userId, e);
         }
@@ -61,14 +61,14 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("Id must be > 0, given: " + id);
         }
         try {
-            return addressRepositoryImpl.findById(id);
+            return addressRepository.findById(id);
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching address by id: " + id, e);
         }
     }
 
     @Override
-    public Address findByUserIdAndId(int userId, int addressId){
+    public Address findByUserIdAndId(int userId, int addressId) {
         if (userId <= 0) {
             throw new IllegalArgumentException("userId must be > 0, given: " + userId);
         }
@@ -76,19 +76,19 @@ public class AddressServiceImpl implements AddressService {
         if (addressId <= 0) {
             throw new IllegalArgumentException("addressId must be > 0, given: " + addressId);
         }
-        try{
-            if (!userRepositoryImpl.existsById(userId)) {
+        try {
+            if (!userRepository.existsById(userId)) {
                 throw new NotFoundException("User not found with id: " + userId);
             }
-            return addressRepositoryImpl.findByUserIdAndId(userId, addressId)
+            return addressRepository.findByUserIdAndId(userId, addressId)
                     .orElseThrow(() -> new NotFoundException(
                             "Address not found for userId: " + userId + ", addressId: " + addressId
                     ));
-        }catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw e;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(
-                    "Error while fetching address for userId: " + userId + "ans addressId: "+ addressId, e
+                    "Error while fetching address for userId: " + userId + "ans addressId: " + addressId, e
             );
         }
     }
@@ -103,10 +103,10 @@ public class AddressServiceImpl implements AddressService {
         }
         int userId = address.getUserId();
         try {
-            if (!userRepositoryImpl.existsById(userId)) {
+            if (!userRepository.existsById(userId)) {
                 throw new NotFoundException("User not found with id: " + userId);
             }
-            return addressRepositoryImpl.save(address);
+            return addressRepository.save(address);
 
         } catch (DataAccessException e) {
             throw e;
@@ -128,10 +128,10 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("addressId must be > 0, given: " + addressId);
         }
         try {
-            if (!userRepositoryImpl.existsById(userId)) {
+            if (!userRepository.existsById(userId)) {
                 throw new NotFoundException("User not found with id: " + userId);
             }
-            Address existing = addressRepositoryImpl.findById(addressId)
+            Address existing = addressRepository.findById(addressId)
                     .orElseThrow(() ->
                             new NotFoundException("Address not found with id: " + addressId)
                     );
@@ -140,7 +140,7 @@ public class AddressServiceImpl implements AddressService {
                         "Address does not belong to userId: " + userId
                 );
             }
-            addressRepositoryImpl.updateAddress(address);
+            addressRepository.updateAddress(address);
         } catch (DataAccessException e) {
             throw e;
         } catch (Exception e) {
@@ -156,11 +156,11 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("addressId must be > 0, given: " + id);
         }
         try {
-            addressRepositoryImpl.findById(id)
+            addressRepository.findById(id)
                     .orElseThrow(() ->
                             new NotFoundException("Address not found with id: " + id)
                     );
-            addressRepositoryImpl.deleteById(id);
+            addressRepository.deleteById(id);
         } catch (DataAccessException e) {
             throw e;
         } catch (Exception e) {
@@ -176,10 +176,10 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("userId must be > 0, given: " + userId);
         }
         try {
-            if (!userRepositoryImpl.existsById(userId)) {
+            if (!userRepository.existsById(userId)) {
                 throw new NotFoundException("User not found with id: " + userId);
             }
-            addressRepositoryImpl.deleteByUserId(userId);
+            addressRepository.deleteByUserId(userId);
         } catch (DataAccessException e) {
             throw e;
         } catch (Exception e) {

@@ -3,8 +3,7 @@ package com.ram.foodapp.repository.implementation;
 import com.ram.foodapp.config.DBConnection;
 import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.model.cartitem.CartItem;
-import com.ram.foodapp.repository.CartItemReadRepository;
-import com.ram.foodapp.repository.CartItemWriteRepository;
+import com.ram.foodapp.repository.CartItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class CartItemRepositoryImpl implements CartItemReadRepository, CartItemWriteRepository {
+public class CartItemRepositoryImpl implements CartItemRepository {
     private static final Logger logger = LoggerFactory.getLogger(CartItemRepositoryImpl.class);
     private static final String BASE_QUERY = "SELECT * FROM CART_ITEM";
     private static final String ALL_CART_ITEMS = BASE_QUERY + "ORDER BY ID LIMIT ? OFFSET ?";
@@ -28,89 +27,90 @@ public class CartItemRepositoryImpl implements CartItemReadRepository, CartItemW
     private static final String INCREMENT_QUANTITY = "UPDATE CART_ITEM SET QUANTITY = QUANTITY + ? WHERE USER_ID = ? AND MENU_ITEM_ID = ?";
     private static final String DELETE_BY_USER_AND_MENU_ITEM = "DELETE FROM CART_ITEM WHERE USER_ID = ? AND MENU_ITEM_ID = ?";
     private static final String CLEAR_CART = "DELETE FROM CART_ITEM WHERE USER_ID = ?";
+
     @Override
-    public CartItem save(CartItem cartItem){
-        try(Connection connection = DBConnection.getConnection()){
+    public CartItem save(CartItem cartItem) {
+        try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement pstmt = connection.prepareStatement(INSERT_CART_ITEM, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setInt(1,cartItem.getUserId());
-            pstmt.setInt(2,cartItem.getMenuItemId());
-            pstmt.setInt(3,cartItem.getQuantity());
-            pstmt.setString(4,cartItem.getItemName());
-            pstmt.setBigDecimal(5,cartItem.getUnitPrice());
-            pstmt.setString(6,cartItem.getRestaurantName());
+            pstmt.setInt(1, cartItem.getUserId());
+            pstmt.setInt(2, cartItem.getMenuItemId());
+            pstmt.setInt(3, cartItem.getQuantity());
+            pstmt.setString(4, cartItem.getItemName());
+            pstmt.setBigDecimal(5, cartItem.getUnitPrice());
+            pstmt.setString(6, cartItem.getRestaurantName());
             int rows = pstmt.executeUpdate();
             if (rows == 0) {
                 throw new RuntimeException("Failed to insert cart item");
             }
             return cartItem;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("DB error while saving cart item", e);
         }
     }
 
     @Override
-    public List<CartItem> findAll(PageRequest pageRequest){
+    public List<CartItem> findAll(PageRequest pageRequest) {
         List<CartItem> cartItemList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(ALL_CART_ITEMS)){
-            ps.setInt(1,pageRequest.getSize());
-            ps.setInt(2,pageRequest.getPage());
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(ALL_CART_ITEMS)) {
+            ps.setInt(1, pageRequest.getSize());
+            ps.setInt(2, pageRequest.getPage());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     cartItemList.add(mapToCartItem(rs));
                 }
             }
             return cartItemList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<CartItem> findByUserId(int userId){
+    public List<CartItem> findByUserId(int userId) {
         List<CartItem> cartItemList = new ArrayList<>();
-        try(Connection conn = DBConnection.getConnection()){
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(USER_CART_ITEMS);
-            pstmt.setInt(1,userId);
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 cartItemList.add(mapToCartItem(rs));
             }
             return cartItemList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public Optional<CartItem> findByMenuId(int menuId){
-        try(Connection conn = DBConnection.getConnection()){
+    public Optional<CartItem> findByMenuId(int menuId) {
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(CART_ITEM_BY_MENU_ITEM_ID);
-            pstmt.setInt(1,menuId);
+            pstmt.setInt(1, menuId);
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return Optional.of(mapToCartItem(rs));
             }
             return null;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public Optional<CartItem> findByUserIdAndMenuItemId(int userId, int menuId){
-        try(Connection conn = DBConnection.getConnection()){
+    public Optional<CartItem> findByUserIdAndMenuItemId(int userId, int menuId) {
+        try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(CART_ITEM_BY_MENU_AND_USER_ID);
-            pstmt.setInt(1,menuId);
-            pstmt.setInt(1,userId);
+            pstmt.setInt(1, menuId);
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return Optional.of(mapToCartItem(rs));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -206,10 +206,10 @@ public class CartItemRepositoryImpl implements CartItemReadRepository, CartItemW
         }
     }
 
-    public CartItem mapToCartItem(ResultSet rs){
-        try{
-            return new CartItem(rs.getInt("USER_ID"),rs.getInt("MENU_ITEM_ID"),rs.getInt("QUANTITY"), rs.getString("ITEM_NAME"),rs.getBigDecimal("UNIT_PRICE"), rs.getString("RESTAURANT_NAME"));
-        }catch (SQLException e){
+    public CartItem mapToCartItem(ResultSet rs) {
+        try {
+            return new CartItem(rs.getInt("USER_ID"), rs.getInt("MENU_ITEM_ID"), rs.getInt("QUANTITY"), rs.getString("ITEM_NAME"), rs.getBigDecimal("UNIT_PRICE"), rs.getString("RESTAURANT_NAME"));
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

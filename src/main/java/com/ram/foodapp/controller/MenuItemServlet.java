@@ -8,12 +8,12 @@ import com.ram.foodapp.dto.response.MenuItemResponse;
 import com.ram.foodapp.mapper.MenuItemMapper;
 import com.ram.foodapp.model.menuitem.MenuItem;
 import com.ram.foodapp.service.MenuItemService;
-
 import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -31,7 +31,7 @@ public class MenuItemServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
         menuItemService = context.getBean(MenuItemService.class);
     }
 

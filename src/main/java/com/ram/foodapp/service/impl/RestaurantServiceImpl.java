@@ -4,7 +4,7 @@ import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.enums.RestaurantStatus;
 import com.ram.foodapp.model.menuitem.MenuItem;
 import com.ram.foodapp.model.restaurant.Restaurant;
-import com.ram.foodapp.repository.implementation.RestaurantRepositoryImpl;
+import com.ram.foodapp.repository.RestaurantRepository;
 import com.ram.foodapp.service.MenuItemService;
 import com.ram.foodapp.service.RestaurantService;
 
@@ -14,12 +14,12 @@ import java.util.Optional;
 
 public class RestaurantServiceImpl implements RestaurantService {
 
-    private final RestaurantRepositoryImpl restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
     private final MenuItemService menuItemService;
 
-    public RestaurantServiceImpl(RestaurantRepositoryImpl restaurantRepository,MenuItemService menuItemService) {
-        this.restaurantRepository = Objects.requireNonNull(restaurantRepository);
-        this.menuItemService = Objects.requireNonNull(menuItemService);
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, MenuItemService menuItemService) {
+        this.restaurantRepository = restaurantRepository;
+        this.menuItemService = menuItemService;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new IllegalArgumentException("Restaurant not found");
         }
         List<MenuItem> menuItemList = menuItemService.findByRestaurantId(id);
-        for(MenuItem menuItem : menuItemList){
+        for (MenuItem menuItem : menuItemList) {
             menuItemService.deleteById(menuItem.getId());
         }
         restaurantRepository.deleteById(id);

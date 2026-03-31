@@ -1,12 +1,11 @@
 package com.ram.foodapp.repository.implementation;
 
 import com.ram.foodapp.config.DBConnection;
-import com.ram.foodapp.enums.RestaurantStatus;
 import com.ram.foodapp.dto.request.PageRequest;
+import com.ram.foodapp.enums.RestaurantStatus;
 import com.ram.foodapp.model.restaurant.Restaurant;
 import com.ram.foodapp.model.restaurant.RestaurantDetails;
-import com.ram.foodapp.repository.RestaurantReadRepository;
-import com.ram.foodapp.repository.RestaurantWriteRepository;
+import com.ram.foodapp.repository.RestaurantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RestaurantRepositoryImpl implements RestaurantReadRepository, RestaurantWriteRepository {
+public class RestaurantRepositoryImpl implements RestaurantRepository {
     private static final Logger logger = LoggerFactory.getLogger(RestaurantRepositoryImpl.class);
     private static final String SAVE_RESTAURANT = "INSERT INTO RESTAURANT (USER_ID,NAME,ADDRESS_ID,STATUS,RATING,RATING_COUNT) VALUES (?,?,?,?,?,?)";
     private static final String FIND_ALL = "SELECT * FROM RESTAURANT LIMIT ? OFFSET ?";
