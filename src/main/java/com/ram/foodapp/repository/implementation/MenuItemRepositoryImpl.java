@@ -1,15 +1,14 @@
 package com.ram.foodapp.repository.implementation;
 
 import com.ram.foodapp.config.DBConnection;
-import com.ram.foodapp.enums.FoodType;
 import com.ram.foodapp.dto.request.PageRequest;
+import com.ram.foodapp.enums.FoodType;
 import com.ram.foodapp.exception.NotFoundException;
 import com.ram.foodapp.model.menuitem.Category;
 import com.ram.foodapp.model.menuitem.Inventory;
 import com.ram.foodapp.model.menuitem.MenuDetails;
 import com.ram.foodapp.model.menuitem.MenuItem;
-import com.ram.foodapp.repository.MenuItemReadRepository;
-import com.ram.foodapp.repository.MenuItemWriteRepository;
+import com.ram.foodapp.repository.MenuItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class MenuItemRepositoryImpl implements MenuItemReadRepository, MenuItemWriteRepository {
+public class MenuItemRepositoryImpl implements MenuItemRepository {
     private static final Logger logger = LoggerFactory.getLogger(MenuItemRepositoryImpl.class);
     private static final String BASE_QUERY = "SELECT * FROM MENU_ITEM ";
     private static final String RESTAURANT_BASE_QUERY = BASE_QUERY + "WHERE RESTAURANT_ID = ?";
@@ -39,6 +38,7 @@ public class MenuItemRepositoryImpl implements MenuItemReadRepository, MenuItemW
     private static final String UPDATE_PRICE = "UPDATE MENU_ITEM SET PRICE = ? WHERE ID = ?";
     private static final String UPDATE_QUANTITY = "UPDATE MENU_ITEM SET QUANTITY = ? WHERE ID = ?";
     private static final String DELETE_BY_ID = "DELETE FROM MENU_ITEM WHERE ID = ?";
+
     @Override
     public MenuItem save(MenuItem menuItem) {
         try (Connection conn = DBConnection.getConnection()) {
@@ -160,11 +160,11 @@ public class MenuItemRepositoryImpl implements MenuItemReadRepository, MenuItemW
     }
 
     @Override
-    public List<MenuItem> findByRestaurantId(int restaurantId){
+    public List<MenuItem> findByRestaurantId(int restaurantId) {
         List<MenuItem> menuItemList = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(RESTAURANT_BASE_QUERY);
-            pstmt.setInt(1,restaurantId);
+            pstmt.setInt(1, restaurantId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 menuItemList.add(mapToMenuItem(rs));
@@ -181,9 +181,9 @@ public class MenuItemRepositoryImpl implements MenuItemReadRepository, MenuItemW
         List<MenuItem> menuItemList = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(MENU_ITEM_BY_RESTAURANT_ID);
-            pstmt.setInt(1,restaurantId);
-            pstmt.setInt(2,pageRequest.getSize());
-            pstmt.setInt(3,pageRequest.getPage());
+            pstmt.setInt(1, restaurantId);
+            pstmt.setInt(2, pageRequest.getSize());
+            pstmt.setInt(3, pageRequest.getPage());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 menuItemList.add(mapToMenuItem(rs));

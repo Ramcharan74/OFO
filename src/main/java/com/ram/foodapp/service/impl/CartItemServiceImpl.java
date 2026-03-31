@@ -2,7 +2,7 @@ package com.ram.foodapp.service.impl;
 
 import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.model.cartitem.CartItem;
-import com.ram.foodapp.repository.implementation.CartItemRepositoryImpl;
+import com.ram.foodapp.repository.CartItemRepository;
 import com.ram.foodapp.service.CartItemService;
 import com.ram.foodapp.service.MenuItemService;
 
@@ -12,12 +12,12 @@ import java.util.Optional;
 
 public class CartItemServiceImpl implements CartItemService {
 
-    private final CartItemRepositoryImpl cartItemRepository;
+    private final CartItemRepository cartItemRepository;
     private final MenuItemService menuItemService;
 
-    public CartItemServiceImpl(CartItemRepositoryImpl cartItemRepository, MenuItemService menuItemService) {
-        this.cartItemRepository = Objects.requireNonNull(cartItemRepository);
-        this.menuItemService = Objects.requireNonNull(menuItemService);
+    public CartItemServiceImpl(CartItemRepository cartItemRepository, MenuItemService menuItemService) {
+        this.cartItemRepository = cartItemRepository;
+        this.menuItemService = menuItemService;
     }
 
     @Override

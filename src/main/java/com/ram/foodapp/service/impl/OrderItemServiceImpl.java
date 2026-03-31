@@ -4,7 +4,7 @@ import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.exception.DataAccessException;
 import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.orderitem.OrderItem;
-import com.ram.foodapp.repository.implementation.OrderItemRepositoryImpl;
+import com.ram.foodapp.repository.OrderItemRepository;
 import com.ram.foodapp.service.OrderItemService;
 
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.Optional;
 
 
 public class OrderItemServiceImpl implements OrderItemService {
-    OrderItemRepositoryImpl orderItemRepositoryImpl;
+    OrderItemRepository orderItemRepository;
 
-    public OrderItemServiceImpl(OrderItemRepositoryImpl orderItemRepositoryImpl) {
-        this.orderItemRepositoryImpl = orderItemRepositoryImpl;
+    public OrderItemServiceImpl(OrderItemRepository orderItemRepository) {
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -24,9 +24,9 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("OrderItem cannot be null");
         }
         try {
-            OrderItem savedOrderItem = orderItemRepositoryImpl.save(orderItem);
-            if(savedOrderItem.getItemDescription() != null || savedOrderItem.getRestaurantName() != null){
-                savedOrderItem =orderItemRepositoryImpl.update(savedOrderItem);
+            OrderItem savedOrderItem = orderItemRepository.save(orderItem);
+            if (savedOrderItem.getItemDescription() != null || savedOrderItem.getRestaurantName() != null) {
+                savedOrderItem = orderItemRepository.update(savedOrderItem);
             }
             return savedOrderItem;
         } catch (DataAccessException e) {
@@ -35,18 +35,18 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
 
-    public OrderItem update(OrderItem orderItem){
-        if(orderItem == null){
+    public OrderItem update(OrderItem orderItem) {
+        if (orderItem == null) {
             throw new IllegalArgumentException("OrderItem cannot be null");
         }
-        if(orderItem.getId() == null){
+        if (orderItem.getId() == null) {
             throw new IllegalArgumentException("OrderItem Id cannot be null");
         }
-        if(orderItemRepositoryImpl.findById(orderItem.getId()).isEmpty()){
-            throw new IllegalArgumentException("OrderItem not found with Id: "+orderItem.getId());
+        if (orderItemRepository.findById(orderItem.getId()).isEmpty()) {
+            throw new IllegalArgumentException("OrderItem not found with Id: " + orderItem.getId());
         }
         try {
-            return orderItemRepositoryImpl.update(orderItem);
+            return orderItemRepository.update(orderItem);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update order item", e);
         }
@@ -59,7 +59,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("OrderItems list cannot be null or empty");
         }
         for (OrderItem item : orderItems) {
-            if (item == null ) {
+            if (item == null) {
                 throw new IllegalArgumentException("OrderItem cannot be null");
             }
         }
@@ -70,7 +70,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             }
         }
         try {
-            return orderItemRepositoryImpl.saveAll(orderItems);
+            return orderItemRepository.saveAll(orderItems);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to save order items batch", e);
         }
@@ -82,7 +82,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("orderId must be a positive integer");
         }
         try {
-            orderItemRepositoryImpl.deleteByOrderId(orderId);
+            orderItemRepository.deleteByOrderId(orderId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to delete order items for orderId: " + orderId, e);
         }
@@ -94,7 +94,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("id must be a positive integer");
         }
         try {
-            return orderItemRepositoryImpl.findById(id);
+            return orderItemRepository.findById(id);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch order item with id: " + id, e);
         }
@@ -106,7 +106,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("orderId must be a positive integer");
         }
         try {
-            return orderItemRepositoryImpl.findByOrderId(orderId);
+            return orderItemRepository.findByOrderId(orderId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch order items for orderId: " + orderId, e);
         }
@@ -118,7 +118,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("PageRequest cannot be null");
         }
         try {
-            return orderItemRepositoryImpl.findAll(pageRequest);
+            return orderItemRepository.findAll(pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch order items", e);
         }
@@ -133,7 +133,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new IllegalArgumentException("PageRequest cannot be null");
         }
         try {
-            return orderItemRepositoryImpl.findByMenuId(menuId, pageRequest);
+            return orderItemRepository.findByMenuId(menuId, pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch order items for menuId: " + menuId, e);
         }

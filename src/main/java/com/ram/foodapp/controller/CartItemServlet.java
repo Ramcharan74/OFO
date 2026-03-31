@@ -2,18 +2,20 @@ package com.ram.foodapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ram.foodapp.config.AppConfig;
-import com.ram.foodapp.dto.request.*;
+import com.ram.foodapp.dto.request.AddToCartRequest;
+import com.ram.foodapp.dto.request.IncrementCartRequest;
+import com.ram.foodapp.dto.request.UpdateCartQuantityRequest;
 import com.ram.foodapp.dto.response.ApiResponse;
 import com.ram.foodapp.dto.response.CartItemResponse;
 import com.ram.foodapp.mapper.CartItemMapper;
 import com.ram.foodapp.model.cartitem.CartItem;
 import com.ram.foodapp.service.CartItemService;
-
 import com.ram.foodapp.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +34,7 @@ public class CartItemServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
         cartItemService = context.getBean(CartItemService.class);
     }
 

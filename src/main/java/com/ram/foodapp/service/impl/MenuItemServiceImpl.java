@@ -1,24 +1,22 @@
 package com.ram.foodapp.service.impl;
 
-import com.ram.foodapp.enums.FoodType;
 import com.ram.foodapp.dto.request.PageRequest;
+import com.ram.foodapp.enums.FoodType;
 import com.ram.foodapp.exception.DataAccessException;
-import com.ram.foodapp.exception.NotFoundException;
 import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.menuitem.MenuItem;
-import com.ram.foodapp.repository.implementation.MenuItemRepositoryImpl;
+import com.ram.foodapp.repository.MenuItemRepository;
 import com.ram.foodapp.service.MenuItemService;
-import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public class MenuItemServiceImpl implements MenuItemService {
-    MenuItemRepositoryImpl menuItemRepositoryImpl;
+    MenuItemRepository menuItemRepository;
 
-    public MenuItemServiceImpl(MenuItemRepositoryImpl menuItemRepositoryImpl) {
-        this.menuItemRepositoryImpl = menuItemRepositoryImpl;
+    public MenuItemServiceImpl(MenuItemRepository menuItemRepository) {
+        this.menuItemRepository = menuItemRepository;
     }
 
     @Override
@@ -27,7 +25,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("MenuItem cannot be null");
         }
         try {
-            return menuItemRepositoryImpl.save(menuItem);
+            return menuItemRepository.save(menuItem);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to save menu item", e);
         }
@@ -39,7 +37,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("id must be positive");
         }
         try {
-            return menuItemRepositoryImpl.findById(id);
+            return menuItemRepository.findById(id);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu item with id: " + id, e);
         }
@@ -48,19 +46,19 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public List<MenuItem> findAll(PageRequest pageRequest) {
         try {
-            return menuItemRepositoryImpl.findAll(pageRequest);
+            return menuItemRepository.findAll(pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items", e);
         }
     }
 
     @Override
-    public boolean existsById(int id){
+    public boolean existsById(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("id must be positive");
         }
         try {
-            return menuItemRepositoryImpl.existsById(id);
+            return menuItemRepository.existsById(id);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to check menu item with id: " + id, e);
         }
@@ -72,7 +70,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("isAvailable cannot be null");
         }
         try {
-            return menuItemRepositoryImpl.findByAvailability(isAvailable);
+            return menuItemRepository.findByAvailability(isAvailable);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items by availability", e);
         }
@@ -84,7 +82,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("FoodType cannot be null");
         }
         try {
-            return menuItemRepositoryImpl.findByCategory(foodType);
+            return menuItemRepository.findByCategory(foodType);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items by category", e);
         }
@@ -96,19 +94,19 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("restaurantId must be positive");
         }
         try {
-            return menuItemRepositoryImpl.findByRestaurantId(restaurantId, pageRequest);
+            return menuItemRepository.findByRestaurantId(restaurantId, pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items for restaurantId: " + restaurantId, e);
         }
     }
 
     @Override
-    public List<MenuItem> findByRestaurantId(int restaurantId){
+    public List<MenuItem> findByRestaurantId(int restaurantId) {
         if (restaurantId <= 0) {
             throw new IllegalArgumentException("restaurantId must be positive");
         }
         try {
-            return menuItemRepositoryImpl.findByRestaurantId(restaurantId);
+            return menuItemRepository.findByRestaurantId(restaurantId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items for restaurantId: " + restaurantId, e);
         }
@@ -121,7 +119,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("restaurantId must be positive");
         }
         try {
-            return menuItemRepositoryImpl.findAvailableByRestaurantId(restaurantId, pageRequest);
+            return menuItemRepository.findAvailableByRestaurantId(restaurantId, pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch available menu items", e);
         }
@@ -136,7 +134,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("category cannot be null");
         }
         try {
-            return menuItemRepositoryImpl.findByCategorynRestaurant(restaurantId, category, pageRequest);
+            return menuItemRepository.findByCategorynRestaurant(restaurantId, category, pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items by category & restaurant", e);
         }
@@ -151,7 +149,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("subCategory cannot be null or blank");
         }
         try {
-            return menuItemRepositoryImpl.findBySubCategorynRestaurant(restaurantId, subCategory.trim(), pageRequest);
+            return menuItemRepository.findBySubCategorynRestaurant(restaurantId, subCategory.trim(), pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to fetch menu items by subcategory", e);
         }
@@ -166,7 +164,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("Search name cannot be null or blank");
         }
         try {
-            return menuItemRepositoryImpl.searchByName(restaurantId, name.trim(), pageRequest);
+            return menuItemRepository.searchByName(restaurantId, name.trim(), pageRequest);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to search menu items", e);
         }
@@ -178,7 +176,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("MenuItems cannot be null or empty");
         }
         try {
-            return menuItemRepositoryImpl.saveAll(menuItems);
+            return menuItemRepository.saveAll(menuItems);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to save menu items batch", e);
         }
@@ -190,7 +188,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("menuItemId must be positive");
         }
         try {
-            menuItemRepositoryImpl.updateAvailability(menuItemId, isAvailable);
+            menuItemRepository.updateAvailability(menuItemId, isAvailable);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update availability", e);
         }
@@ -205,7 +203,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("Price must be greater than zero");
         }
         try {
-            menuItemRepositoryImpl.updatePrice(menuItemId, price);
+            menuItemRepository.updatePrice(menuItemId, price);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update price", e);
         }
@@ -220,7 +218,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("Quantity cannot be negative");
         }
         try {
-            menuItemRepositoryImpl.updateQuantity(menuItemId, quantity);
+            menuItemRepository.updateQuantity(menuItemId, quantity);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to update quantity", e);
         }
@@ -232,7 +230,7 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new IllegalArgumentException("id must be positive");
         }
         try {
-            menuItemRepositoryImpl.deleteById(id);
+            menuItemRepository.deleteById(id);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed to delete menu item", e);
         }

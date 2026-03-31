@@ -38,15 +38,15 @@ public class User {
     }
 
     public ContactInfo getContactInfo() {
-        return contactInfo;
+        return new ContactInfo(contactInfo.getEmail(),contactInfo.getPhoneNo());
     }
 
     public UserCredentials getCredentials() {
-        return credentials;
+        return new UserCredentials(credentials.getPassword());
     }
 
     public AuditInfo getAuditInfo() {
-        return auditInfo;
+        return new AuditInfo(auditInfo.getCreatedAt());
     }
 
     public Boolean getIsActive() {

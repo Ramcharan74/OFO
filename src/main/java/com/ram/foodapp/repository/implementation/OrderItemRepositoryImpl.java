@@ -3,8 +3,7 @@ package com.ram.foodapp.repository.implementation;
 import com.ram.foodapp.config.DBConnection;
 import com.ram.foodapp.dto.request.PageRequest;
 import com.ram.foodapp.model.orderitem.OrderItem;
-import com.ram.foodapp.repository.OrderItemReadRepository;
-import com.ram.foodapp.repository.OrderItemWriteRepository;
+import com.ram.foodapp.repository.OrderItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class OrderItemRepositoryImpl implements OrderItemReadRepository, OrderItemWriteRepository {
+public class OrderItemRepositoryImpl implements OrderItemRepository {
     private static final Logger logger = LoggerFactory.getLogger(OrderItemRepositoryImpl.class);
     private static final String ALL_ORDER_ITEMS = "SELECT * FROM ORDER_ITEM ORDER BY ID LIMIT ? OFFSET ?";
     private static final String ORDER_ITEMS_BY_ORDER_ID = "SELECT * FROM ORDER_ITEM WHERE ORDER_ID = ?";
@@ -22,7 +21,7 @@ public class OrderItemRepositoryImpl implements OrderItemReadRepository, OrderIt
     private static final String ORDER_ITEM_BY_MENU_ITEM_ID = "SELECT * FROM ODER_ITEM WHERE MENU_ITEM_ID = ? ORDER BY ID LIMIT ? OFFSET ?";
     private static final String INSERT_ORDER_ITEM = "INSERT INTO ORDER_ITEM (ORDER_ID,UNIT_PRICE,QUANTITY,ITEM_NAME) VALUES (?,?,?,?)";
     private static final String DELETE_BY_ID = "DELETE FROM ORDER_ITEM WHERE ID = ?";
-    private static final String UPDATE_ORDER_ITEM = "UPDATE ORDER_ITEM SET UNIT_PRICE = ?, QUANTITY = ?, ITEM_NAME = ?, ITEM_DESCRIPTION = ?, RESTAURANT_NAME = ? WHERE ID = ?" ;
+    private static final String UPDATE_ORDER_ITEM = "UPDATE ORDER_ITEM SET UNIT_PRICE = ?, QUANTITY = ?, ITEM_NAME = ?, ITEM_DESCRIPTION = ?, RESTAURANT_NAME = ? WHERE ID = ?";
 
     @Override
     public OrderItem save(OrderItem orderItem) {
@@ -38,7 +37,7 @@ public class OrderItemRepositoryImpl implements OrderItemReadRepository, OrderIt
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
                     int generated = rs.getInt(1);
-                    OrderItem savedOrderItem = new OrderItem(generated, orderItem.getOrderId(), orderItem.getUnitPrice(), orderItem.getQuantity(),orderItem.getItemName(),orderItem.getItemDescription(),orderItem.getRestaurantName());
+                    OrderItem savedOrderItem = new OrderItem(generated, orderItem.getOrderId(), orderItem.getUnitPrice(), orderItem.getQuantity(), orderItem.getItemName(), orderItem.getItemDescription(), orderItem.getRestaurantName());
                     return savedOrderItem;
                 }
             }
@@ -91,7 +90,7 @@ public class OrderItemRepositoryImpl implements OrderItemReadRepository, OrderIt
     }
 
     @Override
-    public void deleteByOrderId(int orderId){
+    public void deleteByOrderId(int orderId) {
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_BY_ID)) {
@@ -148,26 +147,26 @@ public class OrderItemRepositoryImpl implements OrderItemReadRepository, OrderIt
         List<OrderItem> orderItemList = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(ALL_ORDER_ITEMS)) {
-            ps.setInt(1,pageRequest.getSize());
-            ps.setInt(2,pageRequest.getPage());
+            ps.setInt(1, pageRequest.getSize());
+            ps.setInt(2, pageRequest.getPage());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 orderItemList.add(mapToOrderItem(rs));
             }
             return orderItemList;
         } catch (SQLException e) {
-            throw new RuntimeException("Error while fetching All OrderItems",e);
+            throw new RuntimeException("Error while fetching All OrderItems", e);
         }
     }
 
     @Override
-    public List<OrderItem> findByMenuId(int menuId,PageRequest pageRequest) {
+    public List<OrderItem> findByMenuId(int menuId, PageRequest pageRequest) {
         List<OrderItem> orderItemList = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
             PreparedStatement pst = conn.prepareStatement(ORDER_ITEM_BY_MENU_ITEM_ID);
             pst.setInt(1, menuId);
-            pst.setInt(2,pageRequest.getSize());
-            pst.setInt(3,pageRequest.getPage());
+            pst.setInt(2, pageRequest.getSize());
+            pst.setInt(3, pageRequest.getPage());
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 orderItemList.add(mapToOrderItem(rs));
@@ -181,9 +180,9 @@ public class OrderItemRepositoryImpl implements OrderItemReadRepository, OrderIt
 
     private OrderItem mapToOrderItem(ResultSet rs) {
         try {
-            return new OrderItem(rs.getInt("ID"),rs.getInt("ORDER_ID"),rs.getBigDecimal("UNIT_PRICE"),rs.getInt("QUANTITY"),rs.getString("ITEM_NAME"),rs.getString("ITEM_DESCRIPTION"),rs.getString("RESTAURANT_NAME"));
+            return new OrderItem(rs.getInt("ID"), rs.getInt("ORDER_ID"), rs.getBigDecimal("UNIT_PRICE"), rs.getInt("QUANTITY"), rs.getString("ITEM_NAME"), rs.getString("ITEM_DESCRIPTION"), rs.getString("RESTAURANT_NAME"));
         } catch (SQLException e) {
-            throw new RuntimeException("Error while converting resultset to OrderItem Object",e);
+            throw new RuntimeException("Error while converting resultset to OrderItem Object", e);
         }
     }
 }

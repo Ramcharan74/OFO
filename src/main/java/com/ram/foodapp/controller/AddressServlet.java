@@ -34,7 +34,7 @@ public class AddressServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
         addressService = context.getBean(AddressService.class);
     }
 
