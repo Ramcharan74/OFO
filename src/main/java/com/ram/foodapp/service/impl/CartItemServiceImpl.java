@@ -5,11 +5,13 @@ import com.ram.foodapp.model.cartitem.CartItem;
 import com.ram.foodapp.repository.CartItemRepository;
 import com.ram.foodapp.service.CartItemService;
 import com.ram.foodapp.service.MenuItemService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Service
 public class CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository cartItemRepository;

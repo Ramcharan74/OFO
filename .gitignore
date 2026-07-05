@@ -37,5 +37,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
-
+.claude
 /src/main/resources/db.properties
+.gitignore

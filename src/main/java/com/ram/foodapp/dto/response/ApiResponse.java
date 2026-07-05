@@ -3,7 +3,6 @@ package com.ram.foodapp.dto.response;
 import com.ram.foodapp.enums.ErrorCode;
 
 import java.time.Instant;
-import java.util.List;
 
 public record ApiResponse<T>(
         String status,
@@ -19,7 +18,7 @@ public record ApiResponse<T>(
                 data,
                 Instant.now(),
                 null
-                );
+        );
     }
 
     public static <T> ApiResponse<T> error(String message, ErrorCode errorCode) {

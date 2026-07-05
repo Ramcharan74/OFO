@@ -8,12 +8,14 @@ import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.foodorder.FoodOrder;
 import com.ram.foodapp.repository.OrderRepository;
 import com.ram.foodapp.service.FoodOrderService;
+import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Service
 public class FoodOrderServiceImpl implements FoodOrderService {
     OrderRepository orderRepository;
 
