@@ -6,11 +6,12 @@ import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.orderitem.OrderItem;
 import com.ram.foodapp.repository.OrderItemRepository;
 import com.ram.foodapp.service.OrderItemService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class OrderItemServiceImpl implements OrderItemService {
     OrderItemRepository orderItemRepository;
 
@@ -63,7 +64,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 throw new IllegalArgumentException("OrderItem cannot be null");
             }
         }
-        int orderId = orderItems.getFirst().getOrderId();
+        int orderId = orderItems.get(1).getOrderId();
         for (OrderItem item : orderItems) {
             if (item.getOrderId() != orderId) {
                 throw new IllegalArgumentException("All order items must belong to same orderId");

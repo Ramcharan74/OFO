@@ -11,13 +11,16 @@ import com.ram.foodapp.model.user.User;
 import com.ram.foodapp.model.user.User.Builder;
 import com.ram.foodapp.model.user.UserCredentials;
 import com.ram.foodapp.repository.UserRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@Repository
+@Primary
 public class UserRepositoryImpl implements UserRepository {
     private static final String INSERT_USER = "INSERT INTO USER (EMAIL, PHONE_NO, NAME, PASSWORD, ROLE) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM USER WHERE ID = ?";

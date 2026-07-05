@@ -1,5 +1,7 @@
 package com.ram.foodapp.model.orderitem;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
 import java.math.BigDecimal;
@@ -61,7 +63,6 @@ public final class OrderItem {
         }
     }
 
-    // ✅ Safe getter (no NPE risk)
     public Integer getId() {
         return id;
     }
@@ -114,7 +115,6 @@ public final class OrderItem {
         return Objects.hash(orderId, unitPrice, quantity);
     }
 
-    // ✅ Debug-friendly
     @Override
     public String toString() {
         return "OrderItem{" +

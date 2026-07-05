@@ -7,11 +7,13 @@ import com.ram.foodapp.model.restaurant.Restaurant;
 import com.ram.foodapp.repository.RestaurantRepository;
 import com.ram.foodapp.service.MenuItemService;
 import com.ram.foodapp.service.RestaurantService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Service
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;

@@ -7,10 +7,12 @@ import com.ram.foodapp.model.address.Address;
 import com.ram.foodapp.repository.AddressRepository;
 import com.ram.foodapp.repository.UserRepository;
 import com.ram.foodapp.service.AddressService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AddressServiceImpl implements AddressService {
 
     AddressRepository addressRepository;

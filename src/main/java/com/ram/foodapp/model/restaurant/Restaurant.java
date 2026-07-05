@@ -49,11 +49,9 @@ public class Restaurant {
             if (userId <= 0) {
                 throw new IllegalArgumentException("UserId must be greater than 0");
             }
-
             if (status == null) {
                 status = RestaurantStatus.CLOSE;
             }
-
             Objects.requireNonNull(restaurantDetails, "RestaurantDetails cannot be null");
 
             return new Restaurant(this);

@@ -7,12 +7,16 @@ import com.ram.foodapp.model.address.*;
 import com.ram.foodapp.repository.AddressRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
+@Primary
 public class AddressRepositoryImpl implements AddressRepository {
     private static final Logger logger = LoggerFactory.getLogger(AddressRepositoryImpl.class);
     private static final String BASE_QUERY = "SELECT * FROM ADDRESS ";

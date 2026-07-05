@@ -7,11 +7,12 @@ import com.ram.foodapp.exception.ServiceException;
 import com.ram.foodapp.model.menuitem.MenuItem;
 import com.ram.foodapp.repository.MenuItemRepository;
 import com.ram.foodapp.service.MenuItemService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class MenuItemServiceImpl implements MenuItemService {
     MenuItemRepository menuItemRepository;
 

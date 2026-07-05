@@ -4,9 +4,12 @@ import com.ram.foodapp.dto.request.RegisterUserRequest;
 import com.ram.foodapp.dto.response.UserResponse;
 import com.ram.foodapp.enums.Role;
 import com.ram.foodapp.model.address.PhoneNumber;
+import com.ram.foodapp.model.foodorder.AuditInfo;
 import com.ram.foodapp.model.user.ContactInfo;
 import com.ram.foodapp.model.user.User;
 import com.ram.foodapp.model.user.UserCredentials;
+
+import java.time.LocalDateTime;
 
 public class UserMapper {
     public static User toDomain(RegisterUserRequest registerUserRequest){
@@ -15,6 +18,7 @@ public class UserMapper {
                 .contactInfo(new ContactInfo(registerUserRequest.email(),new PhoneNumber(registerUserRequest.phoneNo())))
                 .credentials(new UserCredentials(registerUserRequest.password()))
                 .role(Role.valueOf(registerUserRequest.role()))
+                .auditInfo(new AuditInfo(LocalDateTime.now()))
                 .build();
     }
 
